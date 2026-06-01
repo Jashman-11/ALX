@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rob Style Beauty – Bucharest</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blush: #f9d8e6;
+    --rose: #e8a0bf;
+    --deep-rose: #c2597a;
+    --petal: #f4b8d1;
+    --cream: #fff8fb;
+    --dark: #3a1525;
+    --mid: #7a3550;
+    --light-mid: #c4748e;
+    --gold: #d4a574;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--dark); overflow-x: hidden; }
+
+  /* PETALS */
+  #petal-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(249,216,230,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rose);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem; height: 64px;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-style: italic; color: var(--deep-rose); letter-spacing: 0.5px; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--mid); font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--deep-rose); }
+  .nav-cta { background: var(--deep-rose); color: white; border: none; padding: 0.55rem 1.4rem; border-radius: 30px; font-size: 0.82rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .nav-cta:hover { background: var(--dark); transform: scale(1.04); }
+
+  /* HERO */
+  #hero {
+    position: relative; z-index: 1; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 2rem 4rem;
+    background: linear-gradient(160deg, #fff0f7 0%, #fce8f3 40%, #f8d4e8 100%);
+  }
+  .hero-badge { display: inline-block; background: var(--rose); color: var(--dark); font-size: 0.72rem; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; padding: 0.4rem 1.2rem; border-radius: 30px; margin-bottom: 1.5rem; }
+  #hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 6rem); line-height: 1.05; color: var(--dark); margin-bottom: 0.5rem; }
+  #hero h1 span { color: var(--deep-rose); font-style: italic; }
+  .hero-sub { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--mid); margin: 1rem 0 2.5rem; letter-spacing: 0.5px; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .btn-primary { background: var(--deep-rose); color: white; border: none; padding: 0.9rem 2.4rem; border-radius: 40px; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 24px rgba(194,89,122,0.35); }
+  .btn-primary:hover { background: var(--dark); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(58,21,37,0.3); }
+  .btn-outline { background: transparent; color: var(--deep-rose); border: 2px solid var(--deep-rose); padding: 0.9rem 2.4rem; border-radius: 40px; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; cursor: pointer; transition: all 0.25s; }
+  .btn-outline:hover { background: var(--deep-rose); color: white; }
+  .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; flex-wrap: wrap; justify-content: center; }
+  .hero-stat { text-align: center; }
+  .hero-stat strong { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--deep-rose); display: block; }
+  .hero-stat span { font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); }
+
+  /* TICKER */
+  .ticker-wrap { background: var(--deep-rose); color: white; padding: 0.75rem 0; overflow: hidden; position: relative; z-index: 2; }
+  .ticker-track { display: flex; animation: ticker-scroll 40s linear infinite; white-space: nowrap; }
+  .ticker-item { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; letter-spacing: 0.5px; padding: 0 2.5rem; flex-shrink: 0; }
+  .ticker-item .stars { color: #ffd700; font-size: 0.9rem; }
+  .ticker-sep { color: rgba(255,255,255,0.4); }
+  @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+
+  /* SERVICES TICKER */
+  .services-ticker { background: var(--blush); color: var(--dark); padding: 0.65rem 0; overflow: hidden; position: relative; z-index: 2; border-top: 1px solid var(--rose); border-bottom: 1px solid var(--rose); }
+  .sticker-track { display: flex; animation: ticker-scroll 25s linear infinite; white-space: nowrap; }
+  .sticker-item { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; padding: 0 2rem; flex-shrink: 0; color: var(--mid); }
+  .sticker-item span.dot { width: 5px; height: 5px; background: var(--deep-rose); border-radius: 50%; display: inline-block; }
+
+  /* SECTION */
+  section { position: relative; z-index: 1; }
+  .section-label { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--deep-rose); font-weight: 700; margin-bottom: 0.8rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); color: var(--dark); line-height: 1.15; margin-bottom: 1rem; }
+  .section-title em { color: var(--deep-rose); font-style: italic; }
+  .section-desc { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--mid); max-width: 560px; line-height: 1.7; }
+
+  /* SERVICES */
+  #services { padding: 7rem 2rem; background: white; }
+  .services-inner { max-width: 1100px; margin: 0 auto; }
+  .services-header { text-align: center; margin-bottom: 4rem; }
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+  .service-card {
+    background: var(--cream); border: 1px solid var(--rose); border-radius: 20px;
+    padding: 2rem 1.5rem; text-align: center; transition: all 0.3s; cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .service-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(194,89,122,0.18); border-color: var(--deep-rose); }
+  .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--rose), var(--deep-rose)); }
+  .service-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+  .service-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--dark); margin-bottom: 0.5rem; font-weight: 600; }
+  .service-desc { font-size: 0.85rem; color: var(--mid); line-height: 1.6; margin-bottom: 1.2rem; }
+  .service-price { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--deep-rose); font-weight: 700; }
+  .service-from { font-size: 0.7rem; color: var(--light-mid); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* REVIEWS */
+  #reviews { padding: 7rem 2rem; background: linear-gradient(135deg, #fff0f7 0%, #fce4ef 100%); }
+  .reviews-inner { max-width: 1100px; margin: 0 auto; }
+  .reviews-header { text-align: center; margin-bottom: 4rem; }
+  .rating-big { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+  .rating-num { font-family: 'Playfair Display', serif; font-size: 4rem; color: var(--deep-rose); line-height: 1; }
+  .stars-big { color: #f59e0b; font-size: 1.6rem; line-height: 1.4; }
+  .rating-count { font-size: 0.85rem; color: var(--mid); }
+  .reviews-carousel { position: relative; overflow: hidden; }
+  .reviews-track { display: flex; transition: transform 0.5s ease; }
+  .review-card {
+    min-width: calc(33.33% - 1rem); margin: 0 0.5rem;
+    background: white; border-radius: 20px; padding: 2rem; border: 1px solid var(--rose);
+    flex-shrink: 0;
+  }
+  .review-stars { color: #f59e0b; font-size: 1rem; margin-bottom: 0.8rem; }
+  .review-text { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--dark); line-height: 1.7; margin-bottom: 1.2rem; font-style: italic; }
+  .review-author { display: flex; align-items: center; gap: 0.8rem; }
+  .review-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--rose); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--dark); flex-shrink: 0; }
+  .review-name { font-weight: 700; font-size: 0.9rem; color: var(--dark); }
+  .review-date { font-size: 0.75rem; color: var(--light-mid); }
+  .carousel-controls { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; }
+  .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rose); border: none; cursor: pointer; transition: all 0.2s; }
+  .carousel-dot.active { background: var(--deep-rose); transform: scale(1.3); }
+  .carousel-arrows { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; }
+  .carousel-btn { background: white; border: 1px solid var(--rose); border-radius: 50%; width: 42px; height: 42px; font-size: 1.1rem; cursor: pointer; color: var(--deep-rose); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+  .carousel-btn:hover { background: var(--deep-rose); color: white; border-color: var(--deep-rose); }
+
+  /* ABOUT */
+  #about { padding: 7rem 2rem; background: white; }
+  .about-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .about-visual { position: relative; }
+  .about-img-box { background: linear-gradient(135deg, var(--blush), var(--petal)); border-radius: 30px; height: 420px; display: flex; align-items: center; justify-content: center; font-size: 6rem; }
+  .about-badge { position: absolute; bottom: -1rem; right: -1rem; background: var(--deep-rose); color: white; border-radius: 20px; padding: 1.2rem 1.5rem; text-align: center; }
+  .about-badge strong { font-family: 'Playfair Display', serif; font-size: 2rem; display: block; }
+  .about-badge span { font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; }
+  .about-content { padding: 1rem 0; }
+  .about-features { list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .about-features li { display: flex; gap: 1rem; align-items: flex-start; font-size: 0.95rem; color: var(--mid); line-height: 1.5; }
+  .about-features li span.check { color: var(--deep-rose); font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+
+  /* CONTACT */
+  #contact { padding: 7rem 2rem; background: var(--dark); }
+  .contact-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+  .contact-inner .section-label { color: var(--rose); }
+  .contact-inner .section-title { color: white; }
+  .contact-inner .section-desc { color: rgba(255,255,255,0.6); margin: 0 auto 3rem; }
+  .contact-info { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
+  .contact-row { display: flex; align-items: center; justify-content: center; gap: 0.8rem; font-size: 0.95rem; color: rgba(255,255,255,0.75); }
+  .contact-row span.icon { font-size: 1.2rem; }
+  .contact-hours { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem 2rem; margin-bottom: 2.5rem; }
+  .contact-hours h4 { color: var(--rose); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+  .hours-row { display: flex; justify-content: space-between; font-size: 0.88rem; color: rgba(255,255,255,0.65); padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .hours-row:last-child { border-bottom: none; }
+  .hours-row span:last-child { color: white; }
+
+  /* FOOTER */
+  footer { background: #2a0e1a; color: rgba(255,255,255,0.45); text-align: center; padding: 2rem; font-size: 0.8rem; letter-spacing: 0.5px; }
+  footer a { color: var(--rose); text-decoration: none; }
+
+  /* CHATBOT */
+  #chat-wrapper { position: fixed; bottom: 2rem; right: 2rem; z-index: 10000; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+  #chat-btn {
+    width: 66px; height: 66px; border-radius: 50%;
+    background: linear-gradient(135deg, #e0397a, var(--mid));
+    border: 3px solid white; cursor: pointer;
+    box-shadow: 0 6px 28px rgba(194,89,122,0.55), 0 0 0 0 rgba(194,89,122,0.4);
+    display: flex; align-items: center; justify-content: center; font-size: 1.7rem;
+    transition: all 0.25s; animation: pulse-btn 2.2s infinite; position: relative;
+  }
+  @keyframes pulse-btn {
+    0%   { box-shadow: 0 6px 28px rgba(194,89,122,0.55), 0 0 0 0 rgba(224,57,122,0.55); }
+    60%  { box-shadow: 0 6px 28px rgba(194,89,122,0.55), 0 0 0 14px rgba(224,57,122,0); }
+    100% { box-shadow: 0 6px 28px rgba(194,89,122,0.55), 0 0 0 0 rgba(224,57,122,0); }
+  }
+  #chat-btn:hover { transform: scale(1.12); }
+  /* notification dot */
+  #chat-notif {
+    position: absolute; top: -3px; right: -3px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #ff3366; border: 2.5px solid white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700; color: white; line-height: 1;
+    animation: notif-bounce 1.8s ease-in-out infinite;
+  }
+  @keyframes notif-bounce { 0%,100%{transform:scale(1)} 40%{transform:scale(1.25)} 60%{transform:scale(0.92)} }
+  /* label tag */
+  #chat-label {
+    background: var(--dark); color: white;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px;
+    padding: 0.28rem 0.85rem; border-radius: 20px;
+    white-space: nowrap; pointer-events: none;
+    box-shadow: 0 3px 12px rgba(58,21,37,0.35);
+    animation: label-fade 0.6s ease both;
+  }
+  @keyframes label-fade { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .chat-bubble { position: fixed; bottom: 6.8rem; right: 2rem; background: white; border: 1.5px solid var(--rose); border-radius: 12px; padding: 0.7rem 1rem; font-size: 0.82rem; color: var(--dark); z-index: 10000; box-shadow: 0 4px 20px rgba(194,89,122,0.15); white-space: nowrap; animation: float-in 0.4s ease; }
+  .chat-bubble::after { content: ''; position: absolute; bottom: -8px; right: 22px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid white; }
+  @keyframes float-in { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  #chat-panel {
+    position: fixed; bottom: 7rem; right: 2rem; z-index: 10000;
+    width: 360px; height: 520px; background: white;
+    border-radius: 24px; border: 1.5px solid var(--rose);
+    box-shadow: 0 20px 60px rgba(58,21,37,0.25);
+    display: none; flex-direction: column; overflow: hidden;
+    animation: panel-in 0.3s ease;
+  }
+  @keyframes panel-in { from{opacity:0;transform:translateY(20px) scale(0.96)} to{opacity:1;transform:translateY(0) scale(1)} }
+  #chat-panel.open { display: flex; }
+  .chat-head { background: linear-gradient(135deg, var(--deep-rose), var(--mid)); color: white; padding: 1rem 1.2rem; display: flex; align-items: center; gap: 0.7rem; }
+  .chat-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .chat-head-info strong { display: block; font-size: 0.9rem; }
+  .chat-head-info span { font-size: 0.72rem; opacity: 0.8; }
+  .chat-head .close-chat { margin-left: auto; background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; opacity: 0.7; padding: 0; transition: opacity 0.2s; }
+  .chat-head .close-chat:hover { opacity: 1; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; scroll-behavior: smooth; }
+  .chat-messages::-webkit-scrollbar { width: 4px; } .chat-messages::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 2px; }
+  .msg { max-width: 82%; font-size: 0.88rem; line-height: 1.5; padding: 0.65rem 0.9rem; border-radius: 16px; }
+  .msg.bot { background: var(--cream); border: 1px solid var(--rose); color: var(--dark); border-bottom-left-radius: 4px; align-self: flex-start; }
+  .msg.user { background: var(--deep-rose); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+  .msg.typing { display: flex; align-items: center; gap: 4px; padding: 0.8rem 1.1rem; }
+  .dot-typing { width: 7px; height: 7px; border-radius: 50%; background: var(--rose); animation: typing-dot 1.2s infinite; }
+  .dot-typing:nth-child(2){animation-delay:0.2s} .dot-typing:nth-child(3){animation-delay:0.4s}
+  @keyframes typing-dot{0%,60%,100%{transform:translateY(0);opacity:0.5}30%{transform:translateY(-5px);opacity:1}}
+  .quick-replies { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 1rem 0.5rem; }
+  .qr-btn { background: var(--cream); border: 1px solid var(--rose); color: var(--mid); font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 20px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+  .qr-btn:hover { background: var(--rose); color: var(--dark); }
+  .chat-input-row { display: flex; gap: 0.5rem; padding: 0.8rem 1rem; border-top: 1px solid var(--blush); }
+  .chat-input-row input { flex: 1; border: 1px solid var(--rose); border-radius: 20px; padding: 0.55rem 1rem; font-size: 0.85rem; font-family: inherit; outline: none; background: var(--cream); color: var(--dark); }
+  .chat-input-row input:focus { border-color: var(--deep-rose); }
+  .chat-input-row button { background: var(--deep-rose); border: none; border-radius: 50%; width: 38px; height: 38px; color: white; font-size: 1rem; cursor: pointer; transition: background 0.2s; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .chat-input-row button:hover { background: var(--dark); }
+
+  /* BOOKING MODAL */
+  #booking-modal { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(58,21,37,0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+  #booking-modal.open { display: flex; }
+  .booking-box { background: white; border-radius: 28px; padding: 2.5rem; width: 100%; max-width: 480px; position: relative; max-height: 90vh; overflow-y: auto; }
+  .booking-box h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--dark); margin-bottom: 0.3rem; }
+  .booking-box p { color: var(--mid); font-size: 0.88rem; margin-bottom: 2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .form-group label { font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; color: var(--mid); font-weight: 700; }
+  .form-group input, .form-group select, .form-group textarea { border: 1px solid var(--rose); border-radius: 10px; padding: 0.7rem 1rem; font-size: 0.9rem; font-family: inherit; color: var(--dark); background: var(--cream); outline: none; transition: border 0.2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--deep-rose); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .close-modal { position: absolute; top: 1.2rem; right: 1.5rem; background: var(--blush); border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer; color: var(--dark); display: flex; align-items: center; justify-content: center; }
+
+  @media(max-width:768px){
+    nav{padding:0 1.2rem;} .nav-links{display:none;}
+    .about-inner{grid-template-columns:1fr;gap:2rem;}
+    .review-card{min-width:calc(100% - 1rem);}
+    #chat-panel{width:calc(100vw - 2rem);right:1rem;}
+    .form-row{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="petal-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">✿ Rob Style Beauty</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openBooking()">Book Now</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">✦ Bucharest's Premier Beauty Salon ✦</div>
+  <h1>Beauty That <span>Blooms</span><br>For You</h1>
+  <p class="hero-sub">Where every visit is a moment of transformation & self-love</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="openBooking()">📅 Book an Appointment</button>
+    <button class="btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Explore Services</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>4.6★</strong><span>Google Rating</span></div>
+    <div class="hero-stat"><strong>106+</strong><span>Happy Clients</span></div>
+    <div class="hero-stat"><strong>8+</strong><span>Years of Beauty</span></div>
+    <div class="hero-stat"><strong>100%</strong><span>Satisfaction</span></div>
+  </div>
+</section>
+
+<!-- REVIEWS TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track" id="reviews-ticker">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- SERVICES TICKER -->
+<div class="services-ticker" aria-hidden="true">
+  <div class="sticker-track" id="services-ticker"></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-inner">
+    <div class="services-header">
+      <p class="section-label">What We Offer</p>
+      <h2 class="section-title">Our <em>Signature</em> Services</h2>
+      <p class="section-desc" style="margin:0 auto">From transformative hair color to flawless nail art — every service crafted with expert hands and pure love.</p>
+    </div>
+    <div class="services-grid" id="services-grid"></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reviews-inner">
+    <div class="reviews-header">
+      <p class="section-label">Client Love</p>
+      <h2 class="section-title">What Our <em>Clients</em> Say</h2>
+      <div class="rating-big">
+        <span class="rating-num">4.6</span>
+        <div>
+          <div class="stars-big">★★★★★</div>
+          <div class="rating-count">Based on 106 Google reviews</div>
+        </div>
+      </div>
+    </div>
+    <div class="reviews-carousel">
+      <div class="reviews-track" id="reviews-track"></div>
+    </div>
+    <div class="carousel-arrows">
+      <button class="carousel-btn" onclick="moveCarousel(-1)">&#8592;</button>
+      <button class="carousel-btn" onclick="moveCarousel(1)">&#8594;</button>
+    </div>
+    <div class="carousel-controls" id="carousel-dots"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-visual">
+      <div class="about-img-box">🌸</div>
+      <div class="about-badge"><strong>4.6 ★</strong><span>Top Rated</span></div>
+    </div>
+    <div class="about-content">
+      <p class="section-label">Our Story</p>
+      <h2 class="section-title">A Salon That <em>Cares</em></h2>
+      <p class="section-desc">Rob Style Beauty has been Bucharest's hidden gem for transformative hair and beauty experiences. Located in the heart of the city, we treat every client like royalty.</p>
+      <ul class="about-features">
+        <li><span class="check">✦</span> Expert colorists trusted by clients for over 8 years</li>
+        <li><span class="check">✦</span> Premium products that protect and nourish your hair</li>
+        <li><span class="check">✦</span> Warm, welcoming atmosphere — you'll feel at home</li>
+        <li><span class="check">✦</span> Personalized consultations before every service</li>
+        <li><span class="check">✦</span> Str. Grigore Alexandrescu 11, București — easy to find</li>
+      </ul>
+      <br>
+      <button class="btn-primary" onclick="openBooking()">Book Your Visit</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label">Find Us</p>
+    <h2 class="section-title" style="color:white">Visit <em style="color:var(--rose)">Rob Style Beauty</em></h2>
+    <p class="section-desc">We'd love to welcome you. Come in, relax, and let us take care of you.</p>
+    <div class="contact-info">
+      <div class="contact-row"><span class="icon">📍</span> Strada Grigore Alexandrescu 11, București, Romania</div>
+      <div class="contact-row"><span class="icon">📞</span> +40 758 484 867</div>
+      <div class="contact-row"><span class="icon">⭐</span> 4.6 / 5.0 on Google Maps (106 reviews)</div>
+    </div>
+    <div class="contact-hours">
+      <h4>Opening Hours</h4>
+      <div class="hours-row"><span>Monday – Friday</span><span>10:00 AM – 8:00 PM</span></div>
+      <div class="hours-row"><span>Saturday</span><span>10:00 AM – 6:00 PM</span></div>
+      <div class="hours-row"><span>Sunday</span><span>By Appointment</span></div>
+    </div>
+    <button class="btn-primary" onclick="openBooking()" style="background:var(--deep-rose)">Book an Appointment ✦</button>
+  </div>
+</section>
+
+<footer>
+  <p>© 2024 Rob Style Beauty · Str. Grigore Alexandrescu 11, București · Crafted with 🌸</p>
+</footer>
+
+<!-- CHATBOT BUTTON -->
+<div class="chat-bubble" id="chat-bubble">💬 Hi! Ready to book or explore our services?</div>
+<div id="chat-wrapper">
+  <span id="chat-label">🌸 Chat with Rosa</span>
+  <button id="chat-btn" onclick="toggleChat()" aria-label="Open chat">
+    🌸
+    <span id="chat-notif">1</span>
+  </button>
+</div>
+
+<!-- CHAT PANEL -->
+<div id="chat-panel">
+  <div class="chat-head">
+    <div class="chat-avatar">🌸</div>
+    <div class="chat-head-info">
+      <strong>Rosa – Beauty Assistant</strong>
+      <span>✦ Online now · Usually replies instantly</span>
+    </div>
+    <button class="close-chat" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="quick-replies" id="quick-replies"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Ask me anything…" onkeydown="if(event.key==='Enter')sendUserMsg()">
+    <button onclick="sendUserMsg()">➤</button>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div id="booking-modal">
+  <div class="booking-box">
+    <button class="close-modal" onclick="closeBooking()">✕</button>
+    <h2>Book Your Visit 🌸</h2>
+    <p>Fill in your details and we'll confirm your appointment shortly.</p>
+    <div class="form-row">
+      <div class="form-group"><label>First Name</label><input type="text" placeholder="Elena"></div>
+      <div class="form-group"><label>Last Name</label><input type="text" placeholder="Popescu"></div>
+    </div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+40 7xx xxx xxx"></div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="email@example.com"></div>
+    <div class="form-group"><label>Service</label>
+      <select>
+        <option>Select a service…</option>
+        <option>Hair Color & Highlights</option>
+        <option>Haircut & Styling</option>
+        <option>Hair Treatment</option>
+        <option>Blowout & Finish</option>
+        <option>Nail Art & Manicure</option>
+        <option>Eyebrow & Lash</option>
+        <option>Bridal Package</option>
+        <option>Full Makeover</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Preferred Date</label><input type="date"></div>
+      <div class="form-group"><label>Preferred Time</label><input type="time" value="10:00"></div>
+    </div>
+    <div class="form-group"><label>Notes (optional)</label><textarea placeholder="Any special requests or notes for us?"></textarea></div>
+    <button class="btn-primary" style="width:100%;padding:1rem" onclick="submitBooking()">Confirm Booking ✦</button>
+  </div>
+</div>
+
+<script>
+// ============ PETAL ANIMATION ============
+const canvas = document.getElementById('petal-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, petals = [];
+const PETAL_COUNT = 65;
+const colors = ['#f4b8d1','#e8a0bf','#f9d8e6','#ee95bc','#c2597a','#d63678','#f0a8c8','#ff80ab'];
+
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+function rand(a,b){ return Math.random()*(b-a)+a; }
+
+function createPetal(initial){
+  return {
+    x: rand(0, W),
+    y: initial ? rand(-H, H) : rand(-80,-20),
+    size: rand(12,26),
+    rot: rand(0, Math.PI*2),
+    rotSpeed: rand(-0.02,0.02),
+    vx: rand(-0.6,0.6),
+    vy: rand(0.5,1.8),
+    alpha: rand(0.55,0.92),
+    color: colors[Math.floor(rand(0,colors.length))],
+    swing: rand(0,Math.PI*2),
+    swingSpeed: rand(0.01,0.03),
+    swingAmp: rand(0.3,1.2)
+  };
+}
+
+for(let i=0;i<PETAL_COUNT;i++) petals.push(createPetal(true));
+
+function drawPetal(p){
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rot);
+  ctx.globalAlpha = p.alpha;
+  ctx.fillStyle = p.color;
+  ctx.beginPath();
+  ctx.moveTo(0,-p.size/2);
+  ctx.bezierCurveTo(p.size*0.6,-p.size*0.6, p.size*0.7,p.size*0.2, 0,p.size*0.6);
+  ctx.bezierCurveTo(-p.size*0.7,p.size*0.2, -p.size*0.6,-p.size*0.6, 0,-p.size/2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function animatePetals(){
+  ctx.clearRect(0,0,W,H);
+  petals.forEach(p=>{
+    p.swing+=p.swingSpeed;
+    p.x += p.vx + Math.sin(p.swing)*p.swingAmp;
+    p.y += p.vy;
+    p.rot += p.rotSpeed;
+    if(p.y > H+30){ Object.assign(p, createPetal(false)); }
+    drawPetal(p);
+  });
+  requestAnimationFrame(animatePetals);
+}
+animatePetals();
+
+// ============ SERVICES DATA ============
+const services = [
+  {icon:'✂️', name:'Haircut & Styling', desc:'Precision cuts tailored to your face shape and lifestyle.', price:'from 80 RON'},
+  {icon:'🎨', name:'Hair Color & Highlights', desc:'Stunning color, balayage, and highlight techniques from expert colorists.', price:'from 200 RON'},
+  {icon:'💆', name:'Hair Treatment', desc:'Deep conditioning, keratin, and repair treatments for lustrous hair.', price:'from 120 RON'},
+  {icon:'💨', name:'Blowout & Finish', desc:'Sleek professional blowout for any occasion — silky and radiant.', price:'from 60 RON'},
+  {icon:'💅', name:'Nail Art & Manicure', desc:'Gel, acrylic, and nail art designs to express your unique style.', price:'from 70 RON'},
+  {icon:'👁️', name:'Eyebrow & Lash', desc:'Brow shaping, tinting, and lash lift for a defined, polished look.', price:'from 50 RON'},
+  {icon:'👰', name:'Bridal Package', desc:'Complete bridal beauty — hair, makeup, nails — for your perfect day.', price:'from 800 RON'},
+  {icon:'✨', name:'Full Makeover', desc:'Head-to-toe transformation: color, cut, nails, and styling.', price:'from 400 RON'},
+];
+
+const grid = document.getElementById('services-grid');
+services.forEach(s=>{
+  grid.innerHTML += `<div class="service-card">
+    <div class="service-icon">${s.icon}</div>
+    <div class="service-name">${s.name}</div>
+    <div class="service-desc">${s.desc}</div>
+    <div class="service-price">${s.price}</div>
+  </div>`;
+});
+
+// ============ SERVICES TICKER ============
+const serviceTicker = document.getElementById('services-ticker');
+const tickerServices = services.map(s=>s.name);
+let sHTML = '';
+for(let i=0;i<3;i++) tickerServices.forEach(name=>{sHTML+=`<div class="sticker-item"><span class="dot"></span>${name}</div>`;});
+serviceTicker.innerHTML = sHTML;
+
+// ============ REVIEWS DATA ============
+const reviews = [
+  {text:'"Amazing salon — the only place I trust to color and cut my hair! Great service and kind atmosphere!"', name:'Kimberley N.', date:'3 years ago', stars:5, init:'KN'},
+  {text:'"Very satisfied! My haircut took on a completely different look. The communication was excellent — we discussed everything beforehand."', name:'Ali V.', date:'3 years ago', stars:5, init:'AV'},
+  {text:'"The best beauty style in Bucharest! Always leave feeling like a new person."', name:'Trinca A.', date:'8 years ago', stars:5, init:'TA'},
+  {text:'"Incredible team! They really listen to what you want and deliver beyond expectations. Highly recommend the color treatments."', name:'Maria D.', date:'1 year ago', stars:5, init:'MD'},
+  {text:'"Warm and welcoming from the first visit. My hair has never looked better. The staff is professional and truly talented."', name:'Irina S.', date:'2 years ago', stars:5, init:'IS'},
+  {text:'"Professional, caring and skilled. I came in for a full balayage and I walked out absolutely glowing!"', name:'Andreea P.', date:'6 months ago', stars:5, init:'AP'},
+];
+
+// Reviews carousel
+const track = document.getElementById('reviews-track');
+reviews.forEach(r=>{
+  track.innerHTML += `<div class="review-card">
+    <div class="review-stars">${'★'.repeat(r.stars)}</div>
+    <div class="review-text">${r.text}</div>
+    <div class="review-author">
+      <div class="review-avatar">${r.init}</div>
+      <div><div class="review-name">${r.name}</div><div class="review-date">${r.date}</div></div>
+    </div>
+  </div>`;
+});
+
+let carouselIdx = 0;
+const visible = window.innerWidth < 768 ? 1 : 3;
+function moveCarousel(dir){
+  const maxIdx = reviews.length - visible;
+  carouselIdx = Math.max(0, Math.min(carouselIdx + dir, maxIdx));
+  const cardW = track.children[0].offsetWidth + 16;
+  track.style.transform = `translateX(-${carouselIdx * cardW}px)`;
+  updateDots();
+}
+const dotsContainer = document.getElementById('carousel-dots');
+reviews.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='carousel-dot'+(i===0?' active':'');
+  d.onclick=()=>{carouselIdx=i;moveCarousel(0);};
+  dotsContainer.appendChild(d);
+});
+function updateDots(){
+  document.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active',i===carouselIdx));
+}
+setInterval(()=>{ carouselIdx=(carouselIdx+1)%(reviews.length-visible+1)||0; moveCarousel(0); }, 4500);
+
+// Reviews ticker
+const tickerTrack = document.getElementById('reviews-ticker');
+let tHTML='';
+for(let i=0;i<2;i++) reviews.forEach(r=>{
+  tHTML+=`<div class="ticker-item"><span class="stars">${'★'.repeat(r.stars)}</span> "${r.text.replace(/["""]/g,'').substring(0,60)}…" — ${r.name} <span class="ticker-sep">|</span></div>`;
+});
+tickerTrack.innerHTML=tHTML;
+
+// ============ BOOKING ============
+function openBooking(){ document.getElementById('booking-modal').classList.add('open'); }
+function closeBooking(){ document.getElementById('booking-modal').classList.remove('open'); }
+document.getElementById('booking-modal').addEventListener('click',function(e){ if(e.target===this) closeBooking(); });
+function submitBooking(){
+  closeBooking();
+  setTimeout(()=>alert('🌸 Thank you! Your booking request has been received. We\'ll call you to confirm your appointment shortly!'),200);
+}
+
+// ============ CHATBOT ============
+let chatOpen=false;
+const chatBubble=document.getElementById('chat-bubble');
+let bubbleHidden=false;
+
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chat-panel').classList.toggle('open', chatOpen);
+  if(chatOpen){
+    chatBubble.style.display='none';
+    bubbleHidden=true;
+    document.getElementById('chat-notif').style.display='none';
+    document.getElementById('chat-label').style.display='none';
+    if(!document.getElementById('chat-messages').children.length) initChat();
+  }
+}
+setTimeout(()=>{ if(!bubbleHidden) chatBubble.style.display='block'; },3000);
+setTimeout(()=>{ if(!chatOpen&&!bubbleHidden) chatBubble.style.display='none'; },9000);
+
+const botName='Rosa';
+const quickReplySets = {
+  welcome: ['📅 Book appointment','💇 See services','⭐ Read reviews','📍 Location & hours'],
+  services: ['✂️ Haircut prices','🎨 Color & highlights','💅 Nails','👰 Bridal package'],
+  booking: ['📅 Book now','💬 Ask a question'],
+  location: ['📅 Book appointment','💬 Another question'],
+};
+
+const botResponses = {
+  'book': { text:"I'd love to help you book! 🌸 You can book instantly by clicking below, or tell me which service you're interested in and your preferred date.", qr:'booking', action:'booking' },
+  'appointment': { text:"Of course! 📅 Click **Book Appointment** to pick your service, date, and time. We'll call to confirm within a few hours!", qr:'booking', action:'booking' },
+  'service': { text:"We offer a wide range of luxurious services:\n\n✂️ Haircut & Styling from 80 RON\n🎨 Color & Highlights from 200 RON\n💆 Hair Treatments from 120 RON\n💅 Nail Art from 70 RON\n👁️ Brow & Lash from 50 RON\n👰 Bridal Package from 800 RON\n\nWhich service interests you most?", qr:'services' },
+  'color': { text:"Our color services are truly special! 🎨 We specialize in balayage, highlights, full color, and ombré. Starting from 200 RON. Would you like to book a color consultation?", qr:'booking' },
+  'haircut': { text:"Our precision haircuts start from just 80 RON ✂️ Our stylists will consult with you beforehand to find the perfect look for your face shape. Ready to book?", qr:'booking' },
+  'nail': { text:"We offer gel manicure, acrylic nails, and stunning nail art designs! 💅 Starting from 70 RON. Want to book a nail appointment?", qr:'booking' },
+  'bridal': { text:"Congratulations! 👰🌸 Our bridal package includes hair styling, makeup, and nail art — everything you need to look absolutely stunning on your big day. Starting from 800 RON. Let's plan your perfect look!", qr:'booking' },
+  'price': { text:"Here's a quick overview of our prices:\n\n✂️ Haircut from 80 RON\n🎨 Color from 200 RON\n💆 Treatments from 120 RON\n💨 Blowout from 60 RON\n💅 Nails from 70 RON\n👁️ Brows & Lash from 50 RON\n\nAll prices are starting rates. Final price depends on hair length and complexity.", qr:'services' },
+  'location': { text:"We're located at:\n📍 Str. Grigore Alexandrescu 11, București\n\n🕙 Mon–Fri: 10:00 AM – 8:00 PM\n🕙 Sat: 10:00 AM – 6:00 PM\n🕙 Sun: By appointment only\n\nGive us a call: 📞 +40 758 484 867", qr:'location' },
+  'hour': { text:"Our opening hours:\n🕙 Monday–Friday: 10:00 AM – 8:00 PM\n🕙 Saturday: 10:00 AM – 6:00 PM\n🕙 Sunday: By appointment only\n\nWant to book an appointment?", qr:'booking' },
+  'review': { text:"We're so proud of our reviews! ⭐ We have a 4.6 rating on Google from 106 happy clients.\n\nHere's what one client said:\n\n\"Amazing salon — the only place I trust to color and cut my hair! Great service and kind atmosphere!\" — Kimberley N.", qr:'booking' },
+  'hello': { text:"Hello gorgeous! 🌸 Welcome to Rob Style Beauty. I'm Rosa, your personal beauty assistant. How can I make your day more beautiful today?", qr:'welcome' },
+  'hi': { text:"Hi there, beautiful! 🌸 I'm Rosa from Rob Style Beauty. What can I help you with today?", qr:'welcome' },
+  'default': { text:"That's a great question! 💬 For the most accurate answer, feel free to call us at 📞 +40 758 484 867, or I can help you book an appointment right now!", qr:'booking' },
+};
+
+function getResponse(msg){
+  const m=msg.toLowerCase();
+  if(m.includes('book')||m.includes('reserv')) return botResponses.book;
+  if(m.includes('appoint')) return botResponses.appointment;
+  if(m.includes('color')||m.includes('highlight')||m.includes('balay')) return botResponses.color;
+  if(m.includes('haircut')||m.includes('cut')||m.includes('trim')) return botResponses.haircut;
+  if(m.includes('nail')||m.includes('manicure')) return botResponses.nail;
+  if(m.includes('bridal')||m.includes('wedding')) return botResponses.bridal;
+  if(m.includes('price')||m.includes('cost')||m.includes('ron')||m.includes('how much')) return botResponses.price;
+  if(m.includes('location')||m.includes('address')||m.includes('where')) return botResponses.location;
+  if(m.includes('hour')||m.includes('open')||m.includes('close')||m.includes('time')) return botResponses.hour;
+  if(m.includes('review')||m.includes('rating')||m.includes('star')) return botResponses.review;
+  if(m.includes('service')||m.includes('offer')) return botResponses.service;
+  if(m.includes('hello')||m.includes('hey')) return botResponses.hello;
+  if(m.includes('hi ')) return botResponses.hi;
+  return botResponses.default;
+}
+
+function initChat(){
+  addBotMsg("Hello gorgeous! 🌸 I'm **Rosa**, your personal beauty assistant at Rob Style Beauty.", 'welcome');
+  setTimeout(()=>addBotMsg("Whether you want to **book an appointment**, explore our services, or just have a question — I'm here to help!", 'welcome'), 900);
+}
+
+function addBotMsg(text, qrKey){
+  const msgs=document.getElementById('chat-messages');
+  const qrEl=document.getElementById('quick-replies');
+  qrEl.innerHTML='';
+  const typing=document.createElement('div');
+  typing.className='msg bot typing';
+  typing.innerHTML='<span class="dot-typing"></span><span class="dot-typing"></span><span class="dot-typing"></span>';
+  msgs.appendChild(typing);
+  msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{
+    typing.remove();
+    const d=document.createElement('div');
+    d.className='msg bot';
+    d.innerHTML=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    msgs.appendChild(d);
+    msgs.scrollTop=msgs.scrollHeight;
+    if(qrKey && quickReplySets[qrKey]){
+      quickReplySets[qrKey].forEach(label=>{
+        const btn=document.createElement('button');
+        btn.className='qr-btn';
+        btn.textContent=label;
+        btn.onclick=()=>handleQR(label);
+        qrEl.appendChild(btn);
+      });
+    }
+  }, 900+Math.random()*400);
+}
+
+function handleQR(label){
+  const msgs=document.getElementById('chat-messages');
+  const d=document.createElement('div');
+  d.className='msg user'; d.textContent=label;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+  document.getElementById('quick-replies').innerHTML='';
+  if(label.includes('Book')){ openBooking(); addBotMsg("I've opened the booking form for you! 📅 Fill in your details and we'll confirm your appointment.", 'booking'); return; }
+  processMessage(label);
+}
+
+function sendUserMsg(){
+  const input=document.getElementById('chat-input');
+  const val=input.value.trim();
+  if(!val) return;
+  const msgs=document.getElementById('chat-messages');
+  const d=document.createElement('div');
+  d.className='msg user'; d.textContent=val;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+  input.value='';
+  document.getElementById('quick-replies').innerHTML='';
+  processMessage(val);
+}
+
+function processMessage(msg){
+  const resp=getResponse(msg);
+  if(resp.action==='booking') openBooking();
+  addBotMsg(resp.text, resp.qr);
+}
+</script>
+</body>
+</html>
